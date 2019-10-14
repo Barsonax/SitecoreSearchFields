@@ -1,0 +1,8 @@
+lic/license.xml
+.vs
+buildoutput
+logs
+data
+src/bin
+src/obj
+*.user

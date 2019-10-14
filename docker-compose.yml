@@ -1,0 +1,70 @@
+version: '2.4'
+
+services:
+
+ identity:
+  image: "${REPOSITORY}${IMAGE_PREFIX}identity:${TAG}"
+  command: -sitecoreHostname ${SITECORE_HOST_NAME} -identityHostname identity
+  networks:
+    - exampleNetwork   
+  volumes:
+    - .\logs\identity:C:\inetpub\wwwroot\identity\app_data\logs
+  depends_on:
+    - mssql
+
+ mssql:
+  image: "${REPOSITORY}${IMAGE_PREFIX}mssql:${TAG}"
+  mem_limit: 4096m
+  cpu_count: 8
+  networks:
+    - exampleNetwork 
+  environment:
+    ACCEPT_EULA: "Y"
+    sa_password: ${SQL_SA_PASSWORD}
+  volumes:
+    - .\data\mssql:C:\Data
+
+ sitecore:
+  image: "${REPOSITORY}${IMAGE_PREFIX}sitecore:${TAG}"
+  command: -sitecoreHostname ${SITECORE_HOST_NAME}
+  mem_limit: 8192m
+  cpu_count: 8
+  networks:
+    exampleNetwork:
+      aliases: 
+        - ${SITECORE_HOST_NAME}
+  volumes:
+    - .\logs\sitecore:c:\inetpub\wwwroot\${SITECORE_SITE_NAME}\App_Data\logs
+    - .\buildoutput:C:\Workspace
+    - .\lic:C:\license    
+  depends_on:
+    - mssql
+    - solr
+    - identity
+
+ solr:
+  image: "${REPOSITORY}${IMAGE_PREFIX}solr:${TAG}"
+  mem_limit: 4096m
+  cpu_count: 8
+  networks:
+    - exampleNetwork 
+  volumes:
+    - .\data\solr:C:\Data
+
+ xconnect:
+  image: "${REPOSITORY}${IMAGE_PREFIX}xconnect:${TAG}"
+  mem_limit: 4096m
+  cpu_count: 8
+  networks:
+    - exampleNetwork 
+  volumes:
+    - .\logs\xconnect:C:\inetpub\wwwroot\xconnect\App_data\Logs
+    - .\lic:C:\license
+  depends_on:
+    - mssql
+    - solr
+
+networks:
+  exampleNetwork:
+    external:
+      name: nat

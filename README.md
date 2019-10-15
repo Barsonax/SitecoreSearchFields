@@ -9,6 +9,10 @@ Because I ran into these limitations I made these custom fields to deal with the
 
 Additionally you can set the persistent filter for a field by using the `pfilter` parameter in the source query. This will be added to the already existing persistent filter in the bucket settings.
 
+# Setup
+ 
+WIP
+
 # Demo
 
 SingleLinkField (similar to droplist but with search):

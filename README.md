@@ -10,6 +10,7 @@ Because I ran into these limitations I made these custom fields to deal with the
 Additionally you can set some parameters in the source field of a field:
 - id: the id of the item you want to search under
 - pfilter: the persistent filter. This will be added to the already existing persistent filter in the bucket settings.
+- more to be added...
 
 # Setup
  

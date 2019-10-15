@@ -12,6 +12,8 @@ Additionally you can set some parameters in the source field of a field:
 - pfilter: the persistent filter. This will be added to the already existing persistent filter in the bucket settings.
 - more to be added...
 
+Uses sitecore 9.2 but might work with other versions as well.
+
 # Setup
  
 WIP

@@ -62,7 +62,7 @@ namespace SitecoreSearchFields.FieldTypes
                     if (Sitecore.Data.ID.TryParse(message[ItemIdParameter], out ID result))
                     {
                         Item obj = Sitecore.Context.ContentDatabase.GetItem(result);
-                        Sitecore.Context.ClientPage.SendMessage(this, $"item:loadintab(id={obj.ID})");
+                        Sitecore.Context.ClientPage.SendMessage(this, $"contenteditor:launchtab(url={obj.ID})");
                     }
                     return;
                 case "multilinksearch:delete":

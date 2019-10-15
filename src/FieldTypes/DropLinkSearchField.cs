@@ -101,7 +101,7 @@ namespace SitecoreSearchFields.FieldTypes
                     var linkedItem = GetLinkedItem();
                     if (linkedItem != null)
                     {
-                        Sitecore.Context.ClientPage.SendMessage(this, $"item:loadintab(id={linkedItem.ID})");
+                        Sitecore.Context.ClientPage.SendMessage(this, $"contenteditor:launchtab(url={linkedItem.ID})");
                     }
 
                     return;

@@ -1,6 +1,6 @@
 # SitecoreSearchFields
 
-Did you run into the limitations of the build in fields of sitecore when using buckets or a heavily search driven workflow for content editors? Would you wish you could have proper search enabled fields? 
+Did you run into the limitations of the build in fields of sitecore when using buckets or a heavily search driven workflow for content editors? Is hard to find your items that are in buckets when using droplink or multilist fields? Would you wish you could have proper search enabled fields? 
 
 Because I ran into these limitations I made these custom fields to deal with them. These custom fields provide the same search UI functionality that you normally get when using buckets. Everything works as you would expect such as:
 - Basic search functionality

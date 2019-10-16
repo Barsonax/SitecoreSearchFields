@@ -7,7 +7,6 @@ using Sitecore.Buckets.Util;
 using Sitecore.Diagnostics;
 using Sitecore.sitecore.admin;
 using Sitecore.Web;
-using SitecoreSearchFields.FieldTypes;
 
 namespace SitecoreSearchFields.sitecore.shell.Applications.Buckets
 {
@@ -42,8 +41,8 @@ namespace SitecoreSearchFields.sitecore.shell.Applications.Buckets
 
             var queryString = query != null ? HttpUtility.ParseQueryString(query) : HttpContext.Current.Request.QueryString;
 
-            var id = queryString[DropLinkSearchField.IdParameter];
-            var pfilter = queryString[DropLinkSearchField.PfilterParameter];
+            var id = queryString[Constants.IdParameter];
+            var pfilter = queryString[Constants.PfilterParameter];
             var contentDatabase = Sitecore.Context.ContentDatabase;
             var text = string.Empty;
             try
@@ -51,7 +50,7 @@ namespace SitecoreSearchFields.sitecore.shell.Applications.Buckets
                 if (contentDatabase == null)
                     return;
                 var obj = contentDatabase.GetItem(id);
-                var defaultQueryField = obj?.Fields[Constants.DefaultQuery];
+                var defaultQueryField = obj?.Fields[Sitecore.Buckets.Util.Constants.DefaultQuery];
                 if (defaultQueryField != null)
                 {
                     var args = new ExpandIdBasedSearchFiltersArgs(defaultQueryField.Value, contentDatabase);
@@ -59,7 +58,7 @@ namespace SitecoreSearchFields.sitecore.shell.Applications.Buckets
                     _filter = args.ExpandedFilters;
                 }
 
-                var defaultFilterField = obj?.Fields[Constants.DefaultFilter];
+                var defaultFilterField = obj?.Fields[Sitecore.Buckets.Util.Constants.DefaultFilter];
                 if (defaultFilterField == null)
                     return;
                 var globalFilter = defaultFilterField.Value;

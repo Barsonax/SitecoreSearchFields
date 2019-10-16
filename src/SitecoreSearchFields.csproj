@@ -79,6 +79,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="FieldTypes\DropLinkSearchField.cs" />
     <Compile Include="FieldTypes\MultiLinkSearchField.cs" />
     <Compile Include="sitecore\shell\Applications\Buckets\DropLinkUI.aspx.cs">
@@ -89,6 +90,7 @@
       <DependentUpon>DropLinkUI.aspx</DependentUpon>
     </Compile>
     <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\DropLinkSearch\DroplinkSearch.cs" />
+    <Compile Include="Utilities\SourceStringUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="local.pubxml" />
@@ -100,6 +102,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

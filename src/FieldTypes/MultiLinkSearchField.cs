@@ -9,6 +9,7 @@ using Sitecore.Globalization;
 using Sitecore.Resources;
 using Sitecore.Shell.Applications.ContentEditor;
 using Sitecore.Web.UI.Sheer;
+using SitecoreSearchFields.Utilities;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
 
 namespace SitecoreSearchFields.FieldTypes
@@ -100,11 +101,11 @@ namespace SitecoreSearchFields.FieldTypes
             }
             else
             {
-                var source = DropLinkSearchField.GetSourceString(ItemID, ItemLanguage, Source);
-                var id = source[DropLinkSearchField.IdParameter];
-                var persistentFilter = source[DropLinkSearchField.PfilterParameter];
+                var source = SourceStringUtils.GetSourceString(ItemID, ItemLanguage, Source);
+                var id = source[Constants.IdParameter];
+                var persistentFilter = source[Constants.PfilterParameter];
 
-                var url = Sitecore.UIUtil.GetUri("control:DroplinkSearch", $"id={id}&{DropLinkSearchField.PfilterParameter}={persistentFilter}");
+                var url = Sitecore.UIUtil.GetUri("control:DroplinkSearch", $"id={id}&{Constants.PfilterParameter}={persistentFilter}");
 
                 SheerResponse.ShowModalDialog(url, "1300", "700", "", true);
                 args.WaitForPostBack();
@@ -178,11 +179,6 @@ namespace SitecoreSearchFields.FieldTypes
             output.Write("<span>");
             imageBuilder.Render(output);
             output.Write("</span>");
-        }
-
-        private void RenderButton()
-        {
-
         }
 
         protected void SetModified()

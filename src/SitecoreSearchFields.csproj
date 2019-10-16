@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="FieldTypes\DropLinkSearchField.cs" />
+    <Compile Include="FieldTypes\CustomFieldBase.cs" />
     <Compile Include="FieldTypes\MultiLinkSearchField.cs" />
     <Compile Include="sitecore\shell\Applications\Buckets\DropLinkUI.aspx.cs">
       <DependentUpon>DropLinkUI.aspx</DependentUpon>

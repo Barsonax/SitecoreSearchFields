@@ -11,15 +11,13 @@ using Sitecore.Pipelines;
 using Sitecore.Pipelines.GetLookupSourceItems;
 using Sitecore.Shell.Applications.ContentEditor;
 using Sitecore.Web.UI.Sheer;
+using SitecoreSearchFields.Utilities;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
 
 namespace SitecoreSearchFields.FieldTypes
 {
     public class DropLinkSearchField : Control, IContentField
     {
-        public const string IdParameter = "id";
-        public const string PfilterParameter = "pfilter";
-
         public string Source
         {
             get => GetViewStateString(nameof(Source));
@@ -121,11 +119,11 @@ namespace SitecoreSearchFields.FieldTypes
             }
             else
             {
-                var source = GetSourceString(ItemID, ItemLanguage, Source);
-                var id = source[IdParameter];
-                var persistentFilter = source[PfilterParameter];
+                var source = SourceStringUtils.GetSourceString(ItemID, ItemLanguage, Source);
+                var id = source[Constants.IdParameter];
+                var persistentFilter = source[Constants.PfilterParameter];
 
-                var url = Sitecore.UIUtil.GetUri("control:DroplinkSearch",  $"id={id}&{PfilterParameter}={persistentFilter}");
+                var url = Sitecore.UIUtil.GetUri("control:DroplinkSearch",  $"id={id}&{Constants.PfilterParameter}={persistentFilter}");
                 
                 SheerResponse.ShowModalDialog(url, "1300", "700", "", true);
                 args.WaitForPostBack();
@@ -140,30 +138,6 @@ namespace SitecoreSearchFields.FieldTypes
         public void SetValue(string value)
         {
             Value = value;
-        }
-
-        public static NameValueCollection GetSourceString(string itemId, string itemLanguage, string source)
-        {
-            var current = Sitecore.Context.ContentDatabase.GetItem(new ID(itemId), Language.Parse(itemLanguage));
-            var lookupSourceItemsArgs = new GetLookupSourceItemsArgs
-            {
-                Item = current,
-                Source = source
-            };
-            try
-            {
-                using (new LongRunningOperationWatcher(1000, "getLookupSourceItems pipeline[item={0}, source={1}]", current.Paths.Path, source))
-                {
-                    CorePipeline.Run("getLookupSourceItems", lookupSourceItemsArgs);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new LookupSourceException(source, ex);
-            }
-
-            var parsedSource = HttpUtility.ParseQueryString(lookupSourceItemsArgs.Source.ToLower());
-            return parsedSource;
         }
 
         private string GetDisplayValue()

@@ -3,11 +3,13 @@ using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Globalization;
 using Sitecore.Web.UI.Sheer;
-using SitecoreSearchFields.Utilities;
+using SitecoreSearchFields.Base;
+using SitecoreSearchFields.Base.FieldTypes;
+using SitecoreSearchFields.Base.Utilities;
 
-namespace SitecoreSearchFields.FieldTypes
+namespace SitecoreSearchFields.SingleLink.FieldTypes
 {
-    public class DropLinkSearchField : CustomFieldBase
+    public class SingleLinkSearchField : CustomFieldBase
     {
         public string DisplayValue
         {
@@ -34,14 +36,6 @@ namespace SitecoreSearchFields.FieldTypes
                                      "box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);" +
                                      "transition: border-color ease -in-out .15s, box-shadow ease -in-out .15s;";
 
-        protected override void DoRender(HtmlTextWriter output)
-        {
-            var displayValue = GetDisplayValue();
-            this.SetWidthAndHeightStyle();
-            output.Write($"<div{this.ControlAttributes}style=\"{DivStyle}\">{displayValue}</div>");
-            this.RenderChildren(output);
-        }
-
         public override void HandleMessage(Message message)
         {
             base.HandleMessage(message);
@@ -52,10 +46,10 @@ namespace SitecoreSearchFields.FieldTypes
 
             switch (message.Name)
             {
-                case "droplinksearch:search":
+                case "singlelinksearch:search":
                     Sitecore.Context.ClientPage.Start(this, nameof(Search));
                     return;
-                case "droplinksearch:clear":
+                case "singlelinksearch:clear":
                     if (!string.IsNullOrEmpty(Value))
                     {
                         Value = string.Empty;
@@ -63,15 +57,21 @@ namespace SitecoreSearchFields.FieldTypes
                         DisplayValue = GetDisplayValue();
                     }
                     return;
-                case "droplinksearch:open":
-                    var linkedItem = GetLinkedItem();
-                    if (linkedItem != null)
+                case "singlelinksearch:open":
+                    if (Sitecore.Data.ID.TryParse(Value, out ID result))
                     {
-                        Sitecore.Context.ClientPage.SendMessage(this, $"contenteditor:launchtab(url={linkedItem.ID})");
+                        ContentEditorUtils.OpenItemInTab(result);
                     }
-
                     return;
             }
+        }
+
+        protected override void Render(HtmlTextWriter output)
+        {
+            var displayValue = GetDisplayValue();
+            this.SetWidthAndHeightStyle();
+            output.Write($"<div{this.ControlAttributes}style=\"{DivStyle}\">{displayValue}</div>");
+            this.RenderChildren(output);
         }
 
         private void Search(ClientPipelineArgs args)
@@ -91,9 +91,8 @@ namespace SitecoreSearchFields.FieldTypes
                 var id = source[Constants.IdParameter];
                 var persistentFilter = source[Constants.PfilterParameter];
 
-                var url = Sitecore.UIUtil.GetUri("control:DroplinkSearch",  $"id={id}&{Constants.PfilterParameter}={persistentFilter}");
-                
-                SheerResponse.ShowModalDialog(url, "1300", "700", "", true);
+                ContentEditorUtils.ShowSearchDialog(id, persistentFilter);
+
                 args.WaitForPostBack();
             }
         }

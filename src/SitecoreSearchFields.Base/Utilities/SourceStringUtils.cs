@@ -8,7 +8,7 @@ using Sitecore.Globalization;
 using Sitecore.Pipelines;
 using Sitecore.Pipelines.GetLookupSourceItems;
 
-namespace SitecoreSearchFields.Utilities
+namespace SitecoreSearchFields.Base.Utilities
 {
     public static class SourceStringUtils
     {

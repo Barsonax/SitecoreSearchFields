@@ -1,4 +1,4 @@
-﻿namespace SitecoreSearchFields
+﻿namespace SitecoreSearchFields.Base
 {
     public static class Constants
     {

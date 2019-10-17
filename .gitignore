@@ -3,6 +3,7 @@ lic/license.xml
 buildoutput
 logs
 data
-src/bin
-src/obj
+bin
+obj
 *.user
+.tmp

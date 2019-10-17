@@ -1,7 +1,7 @@
 ﻿using Sitecore.Shell.Applications.ContentEditor;
 using Sitecore.Web.UI.HtmlControls;
 
-namespace SitecoreSearchFields.FieldTypes
+namespace SitecoreSearchFields.Base.FieldTypes
 {
     public abstract class CustomFieldBase : Control, IContentField
     {

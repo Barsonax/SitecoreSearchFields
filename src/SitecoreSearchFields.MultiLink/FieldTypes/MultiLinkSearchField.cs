@@ -8,9 +8,11 @@ using Sitecore.Diagnostics;
 using Sitecore.Globalization;
 using Sitecore.Resources;
 using Sitecore.Web.UI.Sheer;
-using SitecoreSearchFields.Utilities;
+using SitecoreSearchFields.Base;
+using SitecoreSearchFields.Base.FieldTypes;
+using SitecoreSearchFields.Base.Utilities;
 
-namespace SitecoreSearchFields.FieldTypes
+namespace SitecoreSearchFields.MultiLink.FieldTypes
 {
     public class MultiLinkSearchField : CustomFieldBase
     {
@@ -32,8 +34,7 @@ namespace SitecoreSearchFields.FieldTypes
                 case "multilinksearch:open":
                     if (Sitecore.Data.ID.TryParse(message[ItemIdParameter], out ID result))
                     {
-                        Item obj = Sitecore.Context.ContentDatabase.GetItem(result);
-                        Sitecore.Context.ClientPage.SendMessage(this, $"contenteditor:launchtab(url={obj.ID})");
+                        ContentEditorUtils.OpenItemInTab(result);
                     }
                     return;
                 case "multilinksearch:delete":
@@ -45,17 +46,12 @@ namespace SitecoreSearchFields.FieldTypes
             }
         }
 
-        private void UpdateValue(string newValue)
+        protected override void Render(HtmlTextWriter output)
         {
-            var oldValue = Value;
-            if (oldValue != newValue)
-            {
-                SetModified();
-                Value = newValue;
-                HtmlTextWriter output = new HtmlTextWriter(new StringWriter());
-                this.RenderItems(output);
-                SheerResponse.SetInnerHtml(this.ID, output.InnerWriter.ToString());
-            }
+            Assert.ArgumentNotNull((object)output, nameof(output));
+            output.Write($"<div id=\"{this.ID}\" class=\"scContentControl scTreelistEx\" onactivate=\"javascript:return scForm.activate(this,event)\" ondeactivate=\"javascript:return scForm.activate(this,event)\">");
+            this.RenderItems(output);
+            output.Write("</div>");
         }
 
         private void Search(ClientPipelineArgs args)
@@ -75,19 +71,23 @@ namespace SitecoreSearchFields.FieldTypes
                 var id = source[Constants.IdParameter];
                 var persistentFilter = source[Constants.PfilterParameter];
 
-                var url = Sitecore.UIUtil.GetUri("control:DroplinkSearch", $"id={id}&{Constants.PfilterParameter}={persistentFilter}");
+                ContentEditorUtils.ShowSearchDialog(id, persistentFilter);
 
-                SheerResponse.ShowModalDialog(url, "1300", "700", "", true);
                 args.WaitForPostBack();
             }
         }
 
-        protected override void Render(HtmlTextWriter output)
+        private void UpdateValue(string newValue)
         {
-            Assert.ArgumentNotNull((object)output, nameof(output));
-            output.Write($"<div id=\"{this.ID}\" class=\"scContentControl scTreelistEx\" onactivate=\"javascript:return scForm.activate(this,event)\" ondeactivate=\"javascript:return scForm.activate(this,event)\">");
-            this.RenderItems(output);
-            output.Write("</div>");
+            var oldValue = Value;
+            if (oldValue != newValue)
+            {
+                SetModified();
+                Value = newValue;
+                HtmlTextWriter output = new HtmlTextWriter(new StringWriter());
+                this.RenderItems(output);
+                SheerResponse.SetInnerHtml(this.ID, output.InnerWriter.ToString());
+            }
         }
 
         private void RenderItems(HtmlTextWriter output)

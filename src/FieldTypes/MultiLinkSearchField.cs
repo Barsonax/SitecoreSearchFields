@@ -7,44 +7,14 @@ using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Globalization;
 using Sitecore.Resources;
-using Sitecore.Shell.Applications.ContentEditor;
 using Sitecore.Web.UI.Sheer;
 using SitecoreSearchFields.Utilities;
-using Control = Sitecore.Web.UI.HtmlControls.Control;
 
 namespace SitecoreSearchFields.FieldTypes
 {
-    public class MultiLinkSearchField : Control, IContentField
+    public class MultiLinkSearchField : CustomFieldBase
     {
         private const string ItemIdParameter = "itemid";
-
-        public string Source
-        {
-            get => GetViewStateString(nameof(Source));
-            set => SetViewStateString(nameof(Source), value);
-        }
-
-        public string ItemID
-        {
-            get => GetViewStateString(nameof(ItemID));
-            set => SetViewStateString(nameof(ItemID), value);
-        }
-
-        public string ItemLanguage
-        {
-            get => GetViewStateString(nameof(ItemLanguage));
-            set => SetViewStateString(nameof(ItemLanguage), value);
-        }
-
-        public string GetValue()
-        {
-            return Value;
-        }
-
-        public void SetValue(string value)
-        {
-            Value = value;
-        }
 
         public override void HandleMessage(Message message)
         {
@@ -179,11 +149,6 @@ namespace SitecoreSearchFields.FieldTypes
             output.Write("<span>");
             imageBuilder.Render(output);
             output.Write("</span>");
-        }
-
-        protected void SetModified()
-        {
-            Sitecore.Context.ClientPage.Modified = true;
         }
     }
 }

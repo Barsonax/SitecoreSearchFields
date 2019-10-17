@@ -1,41 +1,14 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.Web;
-using System.Web.UI;
+﻿using System.Web.UI;
 using Sitecore.Data;
 using Sitecore.Data.Items;
-using Sitecore.Diagnostics;
-using Sitecore.Exceptions;
 using Sitecore.Globalization;
-using Sitecore.Pipelines;
-using Sitecore.Pipelines.GetLookupSourceItems;
-using Sitecore.Shell.Applications.ContentEditor;
 using Sitecore.Web.UI.Sheer;
 using SitecoreSearchFields.Utilities;
-using Control = Sitecore.Web.UI.HtmlControls.Control;
 
 namespace SitecoreSearchFields.FieldTypes
 {
-    public class DropLinkSearchField : Control, IContentField
+    public class DropLinkSearchField : CustomFieldBase
     {
-        public string Source
-        {
-            get => GetViewStateString(nameof(Source));
-            set => SetViewStateString(nameof(Source), value);
-        }
-
-        public string ItemID
-        {
-            get => GetViewStateString(nameof(ItemID));
-            set => SetViewStateString(nameof(ItemID), value);
-        }
-
-        public string ItemLanguage
-        {
-            get => GetViewStateString(nameof(ItemLanguage));
-            set => SetViewStateString(nameof(ItemLanguage), value);
-        }
-
         public string DisplayValue
         {
             get => GetViewStateString(nameof(DisplayValue));
@@ -67,11 +40,6 @@ namespace SitecoreSearchFields.FieldTypes
             this.SetWidthAndHeightStyle();
             output.Write($"<div{this.ControlAttributes}style=\"{DivStyle}\">{displayValue}</div>");
             this.RenderChildren(output);
-        }
-
-        protected void SetModified()
-        {
-            Sitecore.Context.ClientPage.Modified = true;
         }
 
         public override void HandleMessage(Message message)
@@ -128,16 +96,6 @@ namespace SitecoreSearchFields.FieldTypes
                 SheerResponse.ShowModalDialog(url, "1300", "700", "", true);
                 args.WaitForPostBack();
             }
-        }
-
-        public string GetValue()
-        {
-            return Value;
-        }
-
-        public void SetValue(string value)
-        {
-            Value = value;
         }
 
         private string GetDisplayValue()

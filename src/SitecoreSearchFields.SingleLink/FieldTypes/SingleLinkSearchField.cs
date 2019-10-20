@@ -60,7 +60,7 @@ namespace SitecoreSearchFields.SingleLink.FieldTypes
                 case "singlelinksearch:open":
                     if (Sitecore.Data.ID.TryParse(Value, out ID result))
                     {
-                        ContentEditorUtils.OpenItemInTab(result);
+                        ContentEditorUtils.OpenItemInTab(result, ItemLanguage);
                     }
                     return;
             }
@@ -115,7 +115,7 @@ namespace SitecoreSearchFields.SingleLink.FieldTypes
             if (!string.IsNullOrEmpty(value))
             {
                 var id = new ID(value);
-                var item = Sitecore.Context.ContentDatabase.GetItem(id);
+                var item = Sitecore.Context.ContentDatabase.GetItem(id, Language.Parse(ItemLanguage));
                 return item;
             }
             return null;

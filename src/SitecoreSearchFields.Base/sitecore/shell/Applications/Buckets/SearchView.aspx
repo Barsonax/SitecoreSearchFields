@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/sitecore/shell/Applications/Buckets/ItemBucketsSearchResult.Master" AutoEventWireup="true" CodeBehind="DropLinkUI.aspx.cs" Inherits="SitecoreSearchFields.sitecore.shell.Applications.Buckets.DropLinkUI" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/sitecore/shell/Applications/Buckets/ItemBucketsSearchResult.Master" AutoEventWireup="true" CodeBehind="SearchView.aspx.cs" Inherits="SitecoreSearchFields.Base.sitecore.shell.Applications.Buckets.SearchView" %>
 <%@ Register TagPrefix="sc" TagName="BucketSearchUI" Src="BucketSearchUI.ascx" %>
 <%@ OutputCache Location="None" VaryByParam="none" %> 
 

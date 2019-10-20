@@ -7,9 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SitecoreSearchFields.sitecore.shell.Applications.Buckets {
+namespace SitecoreSearchFields.Base.sitecore.shell.Applications.Buckets {
     
     
-    public partial class DropLinkUI {
+    public partial class SearchView
+    {
     }
 }

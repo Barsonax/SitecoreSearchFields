@@ -11,7 +11,7 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SitecoreSearchFields</RootNamespace>
+    <RootNamespace>SitecoreSearchFields.Base</RootNamespace>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -23,42 +23,7 @@
     </NuGetPackageImportStamp>
     <Use64BitIISExpress />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <OutputPath>bin\</OutputPath>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+  <Import Project="$(ProjectDir)..\DefaultProjectSettings.targets" />
   <ItemGroup>
     <PackageReference Include="Sitecore.Buckets.Client">
       <Version>9.2.0</Version>
@@ -73,28 +38,25 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sitecore\shell\Applications\Buckets\DropLinkUI.aspx" />
-    <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\DropLinkSearch\DroplinkSearch.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="sitecore\shell\Applications\Buckets\SearchView.aspx" />
+    <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Search\SearchDialog.xml">
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="FieldTypes\DropLinkSearchField.cs" />
     <Compile Include="FieldTypes\CustomFieldBase.cs" />
-    <Compile Include="FieldTypes\MultiLinkSearchField.cs" />
-    <Compile Include="sitecore\shell\Applications\Buckets\DropLinkUI.aspx.cs">
-      <DependentUpon>DropLinkUI.aspx</DependentUpon>
+    <Compile Include="sitecore\shell\Applications\Buckets\SearchView.aspx.cs">
+      <DependentUpon>SearchView.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="sitecore\shell\Applications\Buckets\DropLinkUI.aspx.designer.cs">
-      <DependentUpon>DropLinkUI.aspx</DependentUpon>
+    <Compile Include="sitecore\shell\Applications\Buckets\SearchView.aspx.designer.cs">
+      <DependentUpon>SearchView.aspx</DependentUpon>
     </Compile>
-    <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\DropLinkSearch\DroplinkSearch.cs" />
+    <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\Search\SearchDialog.cs" />
+    <Compile Include="Utilities\ContentEditorUtils.cs" />
     <Compile Include="Utilities\SourceStringUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="local.pubxml" />
     <None Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -103,7 +65,9 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -137,11 +101,4 @@
     </ItemGroup>
     <Copy SourceFiles="@(PublishFiles)" DestinationFiles="@(PublishFiles->'$(PublishDestination)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="True" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -8,9 +8,9 @@ using Sitecore.Diagnostics;
 using Sitecore.sitecore.admin;
 using Sitecore.Web;
 
-namespace SitecoreSearchFields.sitecore.shell.Applications.Buckets
+namespace SitecoreSearchFields.Base.sitecore.shell.Applications.Buckets
 {
-    public partial class DropLinkUI : AdminPage
+    public partial class SearchView : AdminPage
     {
         private string thisIsWorkBox = string.Empty;
         private string _filter = string.Empty;

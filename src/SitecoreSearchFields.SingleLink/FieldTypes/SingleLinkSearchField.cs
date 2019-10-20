@@ -1,7 +1,11 @@
-﻿using System.Web.UI;
+﻿using System.Collections.Specialized;
+using System.IO;
+using System.Web;
+using System.Web.UI;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Globalization;
+using Sitecore.Resources;
 using Sitecore.Web.UI.Sheer;
 using SitecoreSearchFields.Base;
 using SitecoreSearchFields.Base.FieldTypes;
@@ -11,15 +15,7 @@ namespace SitecoreSearchFields.SingleLink.FieldTypes
 {
     public class SingleLinkSearchField : CustomFieldBase
     {
-        public string DisplayValue
-        {
-            get => GetViewStateString(nameof(DisplayValue));
-            set
-            {
-                SheerResponse.SetInnerHtml(this.ID, Translate.Text(value ?? string.Empty));
-                SetViewStateString(nameof(DisplayValue), value);
-            }
-        }
+        public const string ItemIdParameter = "itemid";
 
         private const string DivStyle = "box-sizing: border-box;" +
                                      "display: block;" +
@@ -46,18 +42,13 @@ namespace SitecoreSearchFields.SingleLink.FieldTypes
 
             switch (message.Name)
             {
-                case "singlelinksearch:search":
+                case "linkfield:search":
                     Sitecore.Context.ClientPage.Start(this, nameof(Search));
                     return;
-                case "singlelinksearch:clear":
-                    if (!string.IsNullOrEmpty(Value))
-                    {
-                        Value = string.Empty;
-                        SetModified();
-                        DisplayValue = GetDisplayValue();
-                    }
+                case "linkfield:delete":
+                    UpdateValue(string.Empty);
                     return;
-                case "singlelinksearch:open":
+                case "linkfield:open":
                     if (Sitecore.Data.ID.TryParse(Value, out ID result))
                     {
                         ContentEditorUtils.OpenItemInTab(result, ItemLanguage);
@@ -68,10 +59,9 @@ namespace SitecoreSearchFields.SingleLink.FieldTypes
 
         protected override void Render(HtmlTextWriter output)
         {
-            var displayValue = GetDisplayValue();
-            this.SetWidthAndHeightStyle();
-            output.Write($"<div{this.ControlAttributes}style=\"{DivStyle}\">{displayValue}</div>");
-            this.RenderChildren(output);
+            output.Write($"<div{this.ControlAttributes}style=\"{DivStyle}\">");
+            RenderItem(output, Value, ItemLanguage, ID);
+            output.Write("</div>");
         }
 
         private void Search(ClientPipelineArgs args)
@@ -80,16 +70,15 @@ namespace SitecoreSearchFields.SingleLink.FieldTypes
             {
                 if (args.HasResult && Value.Equals(args.Result) == false)
                 {
-                    SetModified();
-                    Value = args.Result;
-                    DisplayValue = GetDisplayValue();
+                    string newValue = args.Result;
+                    UpdateValue(newValue);
                 }
             }
             else
             {
-                var source = SourceStringUtils.GetSourceString(ItemID, ItemLanguage, Source);
-                var id = source[Constants.IdParameter];
-                var persistentFilter = source[Constants.PfilterParameter];
+                NameValueCollection source = SourceStringUtils.GetSourceString(ItemID, ItemLanguage, Source);
+                string id = source[Constants.IdParameter];
+                string persistentFilter = source[Constants.PfilterParameter];
 
                 ContentEditorUtils.ShowSearchDialog(id, persistentFilter);
 
@@ -97,28 +86,72 @@ namespace SitecoreSearchFields.SingleLink.FieldTypes
             }
         }
 
-        private string GetDisplayValue()
+        public static void RenderItem(HtmlTextWriter output, string value, string language, string controlId)
         {
-            var item = GetLinkedItem();
-            if (item == null)
+            if (string.IsNullOrEmpty(value)) return;
+            Item obj = Sitecore.Context.ContentDatabase.GetItem(value, Language.Parse(language));
+            ImageBuilder imageBuilder = new ImageBuilder();
+            imageBuilder.Width = 16;
+            imageBuilder.Height = 16;
+            imageBuilder.Margin = "0px 4px 0px 0px";
+            imageBuilder.Align = "absmiddle";
+            if (obj == null)
             {
-                var value = Value;
-                if (string.IsNullOrEmpty(value)) return null;
-                return $"Could not find a item with id: {value}";
+                imageBuilder.Src = "Applications/16x16/forbidden.png";
+                output.Write("<div>");
+                imageBuilder.Render(output);
+                output.Write(Translate.Text("Item not found: {0}", (object)HttpUtility.HtmlEncode(value)));
+                output.Write("</div>");
             }
-            return item.Name;
+            else
+            {
+                imageBuilder.Src = obj.Appearance.Icon;
+                output.Write("<div title=\"" + obj.Paths.ContentPath + "\">");
+                RenderButtons(output, value, controlId);
+                imageBuilder.Render(output);
+                output.Write(obj.GetUIDisplayName());
+                output.Write("</div>");
+            }
         }
 
-        private Item GetLinkedItem()
+        private static void RenderButtons(HtmlTextWriter output, string value, string controlId)
         {
-            var value = Value;
-            if (!string.IsNullOrEmpty(value))
+            string openEvent = $"linkfield:open({ItemIdParameter}={value}";
+            string deleteEvent = $"linkfield:delete({ItemIdParameter}={value}";
+
+            RenderButton(output, openEvent, "Office/16x16/magnifying_glass.png", controlId);
+            RenderButton(output, deleteEvent, "Office/16x16/delete.png", controlId);
+
+            output.Write("|");
+        }
+
+        private static void RenderButton(HtmlTextWriter output, string clickEvent, string imageSrc, string controlId)
+        {
+            ImageBuilder imageBuilder = new ImageBuilder();
+            imageBuilder.Width = 16;
+            imageBuilder.Height = 16;
+            imageBuilder.Margin = "0px 8px 0px 0px";
+            imageBuilder.Align = "absmiddle";
+            imageBuilder.Src = imageSrc;
+            imageBuilder.Style = "cursor: pointer;";
+            imageBuilder.OnClick = $"javascript:return scForm.postEvent(this,event,'{clickEvent},id={controlId})')";
+
+            output.Write("<span>");
+            imageBuilder.Render(output);
+            output.Write("</span>");
+        }
+
+        private void UpdateValue(string newValue)
+        {
+            string oldValue = Value;
+            if (oldValue != newValue)
             {
-                var id = new ID(value);
-                var item = Sitecore.Context.ContentDatabase.GetItem(id, Language.Parse(ItemLanguage));
-                return item;
+                SetModified();
+                Value = newValue;
+                HtmlTextWriter output = new HtmlTextWriter(new StringWriter());
+                RenderItem(output, Value, ItemLanguage, ID);
+                SheerResponse.SetInnerHtml(this.ID, output.InnerWriter.ToString());
             }
-            return null;
         }
     }
 }

@@ -34,7 +34,7 @@ namespace SitecoreSearchFields.MultiLink.FieldTypes
                 case "multilinksearch:open":
                     if (Sitecore.Data.ID.TryParse(message[ItemIdParameter], out ID result))
                     {
-                        ContentEditorUtils.OpenItemInTab(result);
+                        ContentEditorUtils.OpenItemInTab(result, ItemLanguage);
                     }
                     return;
                 case "multilinksearch:delete":

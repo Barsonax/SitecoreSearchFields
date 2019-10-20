@@ -1,23 +1,18 @@
-﻿using System.IO;
+﻿using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using Sitecore.Data;
-using Sitecore.Data.Items;
-using Sitecore.Diagnostics;
-using Sitecore.Globalization;
-using Sitecore.Resources;
 using Sitecore.Web.UI.Sheer;
 using SitecoreSearchFields.Base;
 using SitecoreSearchFields.Base.FieldTypes;
 using SitecoreSearchFields.Base.Utilities;
+using SitecoreSearchFields.SingleLink.FieldTypes;
 
 namespace SitecoreSearchFields.MultiLink.FieldTypes
 {
     public class MultiLinkSearchField : CustomFieldBase
     {
-        private const string ItemIdParameter = "itemid";
-
         public override void HandleMessage(Message message)
         {
             base.HandleMessage(message);
@@ -28,29 +23,29 @@ namespace SitecoreSearchFields.MultiLink.FieldTypes
 
             switch (message.Name)
             {
-                case "multilinksearch:search":
+                case "linkfield:search":
                     Sitecore.Context.ClientPage.Start(this, nameof(Search));
                     return;
-                case "multilinksearch:open":
-                    if (Sitecore.Data.ID.TryParse(message[ItemIdParameter], out ID result))
+                case "linkfield:delete":
+                    string itemid = message[SingleLinkSearchField.ItemIdParameter];
+                    string[] values = Value.Split('|');
+                    string newValue = string.Join("|", values.Where(x => x != itemid));
+                    UpdateValue(newValue);
+                    return;
+                case "linkfield:open":
+                    if (Sitecore.Data.ID.TryParse(message[SingleLinkSearchField.ItemIdParameter], out ID result))
                     {
                         ContentEditorUtils.OpenItemInTab(result, ItemLanguage);
                     }
                     return;
-                case "multilinksearch:delete":
-                    var itemid = message[ItemIdParameter];
-                    var values = Value.Split('|');
-                    var newValue = string.Join("|", values.Where(x => x != itemid));
-                    UpdateValue(newValue);
-                    return;
+
             }
         }
 
         protected override void Render(HtmlTextWriter output)
         {
-            Assert.ArgumentNotNull((object)output, nameof(output));
-            output.Write($"<div id=\"{this.ID}\" class=\"scContentControl scTreelistEx\" onactivate=\"javascript:return scForm.activate(this,event)\" ondeactivate=\"javascript:return scForm.activate(this,event)\">");
-            this.RenderItems(output);
+            output.Write($"<div id=\"{ID}\" class=\"scContentControl scTreelistEx\" onactivate=\"javascript:return scForm.activate(this,event)\" ondeactivate=\"javascript:return scForm.activate(this,event)\">");
+            RenderItems(output);
             output.Write("</div>");
         }
 
@@ -60,16 +55,16 @@ namespace SitecoreSearchFields.MultiLink.FieldTypes
             {
                 if (args.HasResult && Value.Equals(args.Result) == false)
                 {
-                    var value = Value;
-                    var newValue = string.IsNullOrEmpty(value) ? args.Result : $"{value}|{args.Result}";
+                    string value = Value;
+                    string newValue = string.IsNullOrEmpty(value) ? args.Result : $"{value}|{args.Result}";
                     UpdateValue(newValue);
                 }
             }
             else
             {
-                var source = SourceStringUtils.GetSourceString(ItemID, ItemLanguage, Source);
-                var id = source[Constants.IdParameter];
-                var persistentFilter = source[Constants.PfilterParameter];
+                NameValueCollection source = SourceStringUtils.GetSourceString(ItemID, ItemLanguage, Source);
+                string id = source[Constants.IdParameter];
+                string persistentFilter = source[Constants.PfilterParameter];
 
                 ContentEditorUtils.ShowSearchDialog(id, persistentFilter);
 
@@ -79,76 +74,24 @@ namespace SitecoreSearchFields.MultiLink.FieldTypes
 
         private void UpdateValue(string newValue)
         {
-            var oldValue = Value;
+            string oldValue = Value;
             if (oldValue != newValue)
             {
                 SetModified();
                 Value = newValue;
                 HtmlTextWriter output = new HtmlTextWriter(new StringWriter());
-                this.RenderItems(output);
-                SheerResponse.SetInnerHtml(this.ID, output.InnerWriter.ToString());
+                RenderItems(output);
+                SheerResponse.SetInnerHtml(ID, output.InnerWriter.ToString());
             }
         }
 
         private void RenderItems(HtmlTextWriter output)
         {
-            Assert.ArgumentNotNull((object)output, nameof(output));
-            var values = this.Value.Split('|').Where(x => !string.IsNullOrEmpty(x));
-            foreach (var value in values)
+            string[] values = Value.Split('|');
+            foreach (string value in values)
             {
-                Item obj = Sitecore.Context.ContentDatabase.GetItem(value, Language.Parse(this.ItemLanguage));
-                ImageBuilder imageBuilder = new ImageBuilder();
-                imageBuilder.Width = 16;
-                imageBuilder.Height = 16;
-                imageBuilder.Margin = "0px 4px 0px 0px";
-                imageBuilder.Align = "absmiddle";
-                if (obj == null)
-                {
-                    imageBuilder.Src = "Applications/16x16/forbidden.png";
-                    output.Write("<div>");
-                    imageBuilder.Render(output);
-                    output.Write(Translate.Text("Item not found: {0}", (object)HttpUtility.HtmlEncode(value)));
-                    output.Write("</div>");
-                }
-                else
-                {
-                    imageBuilder.Src = obj.Appearance.Icon;
-                    output.Write("<div title=\"" + obj.Paths.ContentPath + "\">");
-                    RenderButtons(output, value);
-                    imageBuilder.Render(output);
-                    output.Write(obj.GetUIDisplayName());
-                    output.Write("</div>");
-                }
+                SingleLinkSearchField.RenderItem(output, value, ItemLanguage, ID);
             }
-        }
-
-        private void RenderButtons(HtmlTextWriter output, string value)
-        {
-            var openEvent = $"multilinksearch:open({ItemIdParameter}={value}";
-            var deleteEvent = $"multilinksearch:delete({ItemIdParameter}={value}";
-
-            RenderButton(output, openEvent, "Office/16x16/magnifying_glass.png");
-
-            RenderButton(output, deleteEvent, "Office/16x16/delete.png");
-
-            output.Write("|");
-        }
-
-        private void RenderButton(HtmlTextWriter output, string clickEvent, string imageSrc)
-        {
-            ImageBuilder imageBuilder = new ImageBuilder();
-            imageBuilder.Width = 16;
-            imageBuilder.Height = 16;
-            imageBuilder.Margin = "0px 8px 0px 0px";
-            imageBuilder.Align = "absmiddle";
-            imageBuilder.Src = imageSrc;
-            imageBuilder.Style = "cursor: pointer;";
-            imageBuilder.OnClick =
-                $"javascript:return scForm.postEvent(this,event,'{clickEvent},id={this.ID})')";
-
-            output.Write("<span>");
-            imageBuilder.Render(output);
-            output.Write("</span>");
         }
     }
 }

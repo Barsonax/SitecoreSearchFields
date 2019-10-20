@@ -51,6 +51,10 @@
       <Project>{75760ee3-e808-4459-946c-f7cc42ec5623}</Project>
       <Name>SitecoreSearchFields.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SitecoreSearchFields.SingleLink\SitecoreSearchFields.SingleLink.csproj">
+      <Project>{375ef6f4-f46d-4fd5-89e6-bac50bb257d4}</Project>
+      <Name>SitecoreSearchFields.SingleLink</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

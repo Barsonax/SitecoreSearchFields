@@ -1,6 +1,5 @@
 ﻿using Sitecore.Data;
 using Sitecore.Data.Items;
-using Sitecore.Data.Serialization.ObjectModel;
 using Sitecore.Globalization;
 using Sitecore.Web.UI.Sheer;
 using SitecoreSearchFields.Base.sitecore.shell.Applications.Content_Manager.Dialogs.Search;
@@ -18,8 +17,19 @@ namespace SitecoreSearchFields.Base.Utilities
 
         public static void OpenItemInTab(ID id, string language)
         {
-            Item obj = Sitecore.Context.ContentDatabase.GetItem(id, Language.Parse(language));
-            Sitecore.Context.ClientPage.SendMessage(null, $"contenteditor:launchtab(url={obj.ID})");
+            Item item = Sitecore.Context.ContentDatabase.GetItem(id, Language.Parse(language));
+            if (item == null)
+            {
+                SheerResponse.Alert($"Item with {id} was not found");
+                return;
+            }
+
+            if (!item.Access.CanRead())
+            {
+                SheerResponse.Alert("You do not have read permission on this item");
+                return;
+            }
+            Sitecore.Context.ClientPage.SendMessage(null, $"contenteditor:launchtab(id={item.ID},la={language})");
         }
     }
 }

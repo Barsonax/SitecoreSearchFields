@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
 using System.Web.UI;
 using Sitecore.Data;
@@ -38,7 +37,6 @@ namespace SitecoreSearchFields.MultiLink.FieldTypes
                         ContentEditorUtils.OpenItemInTab(result, ItemLanguage);
                     }
                     return;
-
             }
         }
 
@@ -74,15 +72,7 @@ namespace SitecoreSearchFields.MultiLink.FieldTypes
 
         private void UpdateValue(string newValue)
         {
-            string oldValue = Value;
-            if (oldValue != newValue)
-            {
-                SetModified();
-                Value = newValue;
-                HtmlTextWriter output = new HtmlTextWriter(new StringWriter());
-                RenderItems(output);
-                SheerResponse.SetInnerHtml(ID, output.InnerWriter.ToString());
-            }
+            UpdateValue(newValue, output => RenderItems(output));
         }
 
         private void RenderItems(HtmlTextWriter output)

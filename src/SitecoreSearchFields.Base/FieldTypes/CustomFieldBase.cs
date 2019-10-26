@@ -1,5 +1,11 @@
-﻿using Sitecore.Shell.Applications.ContentEditor;
+﻿using System;
+using System.IO;
+using System.Web.UI;
+using Sitecore.Globalization;
+using Sitecore.Shell.Applications.ContentEditor;
 using Sitecore.Web.UI.HtmlControls;
+using Sitecore.Web.UI.Sheer;
+using Control = Sitecore.Web.UI.HtmlControls.Control;
 
 namespace SitecoreSearchFields.Base.FieldTypes
 {
@@ -36,6 +42,30 @@ namespace SitecoreSearchFields.Base.FieldTypes
         protected void SetModified()
         {
             Sitecore.Context.ClientPage.Modified = true;
+        }
+
+        protected bool CanWrite()
+        {
+            var item = Sitecore.Context.ContentDatabase.GetItem(Sitecore.Data.ID.Parse(ItemID), Language.Parse(ItemLanguage));
+            return item?.Access.CanWrite() ?? false;
+        }
+
+        protected void UpdateValue(string newValue, Action<HtmlTextWriter> viewUpdate)
+        {
+            if (!CanWrite())
+            {
+                SheerResponse.Alert("You do not have write permission on this item");
+                return;
+            }
+            string oldValue = Value;
+            if (oldValue != newValue)
+            {
+                SetModified();
+                Value = newValue;
+                HtmlTextWriter output = new HtmlTextWriter(new StringWriter());
+                viewUpdate.Invoke(output);
+                SheerResponse.SetInnerHtml(ID, output.InnerWriter.ToString());
+            }
         }
     }
 }

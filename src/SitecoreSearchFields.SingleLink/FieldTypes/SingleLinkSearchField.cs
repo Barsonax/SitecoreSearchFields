@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using System.IO;
 using System.Web;
 using System.Web.UI;
 using Sitecore.Data;
@@ -143,15 +142,7 @@ namespace SitecoreSearchFields.SingleLink.FieldTypes
 
         private void UpdateValue(string newValue)
         {
-            string oldValue = Value;
-            if (oldValue != newValue)
-            {
-                SetModified();
-                Value = newValue;
-                HtmlTextWriter output = new HtmlTextWriter(new StringWriter());
-                RenderItem(output, Value, ItemLanguage, ID);
-                SheerResponse.SetInnerHtml(this.ID, output.InnerWriter.ToString());
-            }
+            UpdateValue(newValue, output => RenderItem(output, Value, ItemLanguage, ID));
         }
     }
 }

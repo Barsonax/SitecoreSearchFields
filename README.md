@@ -7,11 +7,6 @@ Because I ran into these limitations I reverse engineered how sitecore uses the 
 - Facets
 - Bucket settings
 
-Additionally you can set some parameters in the source field of a field:
-- id: the id of the item you want to search under
-- pfilter: the persistent filter. This will be added to the already existing persistent filter in the bucket settings.
-- more to be added...
-
 Uses sitecore 9.2 but might work with other versions as well.
 
 # Documentation

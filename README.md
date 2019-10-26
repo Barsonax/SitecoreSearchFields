@@ -16,11 +16,3 @@ Uses sitecore 9.2 but might work with other versions as well.
 
 # Documentation
 The documentation can be found in the [wiki](https://github.com/Barsonax/SitecoreSearchFields/wiki)
-
-# Demo
-
-SingleLinkField (similar to droplist but with search):
-![singlelinkSample1](https://user-images.githubusercontent.com/19387223/66863388-30d4e380-ef93-11e9-9594-3fe0396e3017.gif)
-
-MultiLinkField (yes I know we have a multilist with search but its not very usable)
-![multilinkSample1](https://user-images.githubusercontent.com/19387223/66863390-329ea700-ef93-11e9-89ad-081105331e3b.gif)

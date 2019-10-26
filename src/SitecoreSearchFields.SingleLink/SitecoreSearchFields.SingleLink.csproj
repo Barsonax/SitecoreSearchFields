@@ -38,6 +38,7 @@
     <Compile Include="FieldTypes\SingleLinkSearchField.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Config\Include\SitecoreSearchFields\SitecoreSearchFields.SingleLink.config" />
     <None Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

@@ -14,9 +14,8 @@ Additionally you can set some parameters in the source field of a field:
 
 Uses sitecore 9.2 but might work with other versions as well.
 
-# Setup
- 
-WIP
+# Documentation
+The documentation can be found in the [wiki](https://github.com/Barsonax/SitecoreSearchFields/wiki)
 
 # Demo
 

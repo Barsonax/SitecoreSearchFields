@@ -3,14 +3,15 @@ using Sitecore.Data.Items;
 using Sitecore.Globalization;
 using Sitecore.Web.UI.Sheer;
 using SitecoreSearchFields.Base.sitecore.shell.Applications.Content_Manager.Dialogs.Search;
+using System.Collections.Specialized;
 
 namespace SitecoreSearchFields.Base.Utilities
 {
     public static class ContentEditorUtils
     {
-        public static void ShowSearchDialog(string id, string persistentFilter)
+        public static void ShowSearchDialog(NameValueCollection parameters)
         {
-            var url = Sitecore.UIUtil.GetUri($"control:{nameof(SearchDialog)}", $"id={id}&{Constants.PfilterParameter}={persistentFilter}");
+            var url = Sitecore.UIUtil.GetUri($"control:{nameof(SearchDialog)}", parameters.ToString());
 
             SheerResponse.ShowModalDialog(url, "1300", "700", "", true);
         }

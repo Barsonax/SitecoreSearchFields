@@ -6,7 +6,6 @@ using Sitecore.Data.Items;
 using Sitecore.Globalization;
 using Sitecore.Resources;
 using Sitecore.Web.UI.Sheer;
-using SitecoreSearchFields.Base;
 using SitecoreSearchFields.Base.FieldTypes;
 using SitecoreSearchFields.Base.Utilities;
 
@@ -75,11 +74,8 @@ namespace SitecoreSearchFields.SingleLink.FieldTypes
             }
             else
             {
-                NameValueCollection source = SourceStringUtils.GetSourceString(ItemID, ItemLanguage, Source);
-                string id = source[Constants.IdParameter];
-                string persistentFilter = source[Constants.PfilterParameter];
-
-                ContentEditorUtils.ShowSearchDialog(id, persistentFilter);
+                NameValueCollection parameters = SourceStringUtils.GetSourceString(ItemID, ItemLanguage, Source);
+                ContentEditorUtils.ShowSearchDialog(parameters);
 
                 args.WaitForPostBack();
             }

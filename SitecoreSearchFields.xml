@@ -1,0 +1,119 @@
+<project>
+  <Metadata>
+    <metadata>
+      <PackageName>SitecoreSearchFields</PackageName>
+      <Author>Rick van Dam</Author>
+      <Version />
+      <Revision />
+      <License />
+      <Comment>https://github.com/Barsonax/SitecoreSearchFields</Comment>
+      <Attributes />
+      <Readme />
+      <Publisher>Rick van Dam</Publisher>
+      <PostStep />
+      <PackageID />
+    </metadata>
+  </Metadata>
+  <SaveProject>True</SaveProject>
+  <Sources>
+    <files>
+      <Root>/App_Config/Include/SitecoreSearchFields</Root>
+      <Converter>
+        <FileToEntryConverter>
+          <Root>/</Root>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Overwrite</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </FileToEntryConverter>
+      </Converter>
+      <Include>
+        <FileNameFilter>
+          <Pattern />
+          <AcceptDirectories>False</AcceptDirectories>
+        </FileNameFilter>
+        <FileDateFilter>
+          <FilterType>CreatedFilter</FilterType>
+          <ActionDateTo />
+          <ActionDateFrom />
+          <NotOlderThan />
+        </FileDateFilter>
+        <FileDateFilter>
+          <FilterType>ModifiedFilter</FilterType>
+          <ActionDateTo />
+          <ActionDateFrom />
+          <NotOlderThan />
+        </FileDateFilter>
+      </Include>
+      <Exclude />
+      <Name>ConfigFiles</Name>
+    </files>
+    <xfiles>
+      <Entries>
+        <x-item>/bin/SitecoreSearchFields.Base.dll</x-item>
+        <x-item>/bin/SitecoreSearchFields.MultiLink.dll</x-item>
+        <x-item>/bin/SitecoreSearchFields.SingleLink.dll</x-item>
+      </Entries>
+      <Converter>
+        <FileToEntryConverter>
+          <Root>/</Root>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Overwrite</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </FileToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Dllfiles</Name>
+    </xfiles>
+    <xitems>
+      <Entries>
+        <x-item>/core/sitecore/system/Field types/Link Types/SingleLinkSearch/{665EF804-ED56-498C-B234-7ABBAB3E9908}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/Link Types/SingleLinkSearch/Menu/{4EE81769-A68B-43A2-9635-F0495BABB42C}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/Link Types/SingleLinkSearch/Menu/Search/{5F4323C0-A3C0-4DD9-9117-D4A4022C3EF8}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/List Types/MultiLinkSearch/{2CC1EE6C-C6A4-4112-839F-AD277298E630}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/List Types/MultiLinkSearch/Menu/{FCD69430-7DEF-4248-B4AC-33DCCADD2DB2}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/List Types/MultiLinkSearch/Menu/Search/{D2FCECD2-FBA1-45CB-AF1C-5FF07EDFCA7B}/invariant/0</x-item>
+      </Entries>
+      <SkipVersions>False</SkipVersions>
+      <Converter>
+        <ItemToEntryConverter>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Overwrite</ItemMode>
+                  <ItemMergeMode>Clear</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </ItemToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>CoreFieldTypesItems</Name>
+    </xitems>
+  </Sources>
+  <Converter>
+    <TrivialConverter>
+      <Transforms />
+    </TrivialConverter>
+  </Converter>
+  <Include />
+  <Exclude />
+  <Name />
+</project>

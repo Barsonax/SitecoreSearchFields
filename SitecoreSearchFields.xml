@@ -107,6 +107,52 @@
       <Exclude />
       <Name>CoreFieldTypesItems</Name>
     </xitems>
+    <xfiles>
+      <Entries>
+        <x-item>/sitecore/shell/Applications/Buckets/SearchView.aspx</x-item>
+      </Entries>
+      <Converter>
+        <FileToEntryConverter>
+          <Root>/</Root>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Overwrite</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </FileToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>SearchView.aspx</Name>
+    </xfiles>
+    <xfiles>
+      <Entries>
+        <x-item>/sitecore/shell/Applications/Content Manager/Dialogs/Search/SearchDialog.xml</x-item>
+      </Entries>
+      <Converter>
+        <FileToEntryConverter>
+          <Root>/</Root>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Overwrite</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </FileToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>SearchDialog.xml</Name>
+    </xfiles>
   </Sources>
   <Converter>
     <TrivialConverter>

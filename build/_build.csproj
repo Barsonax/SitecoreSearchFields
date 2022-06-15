@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Nuke.Common" Version="0.22.2" />
-    <PackageReference Include="NuGet.CommandLine" Version="4.9.3">
+    <PackageReference Include="NuGet.CommandLine" Version="4.9.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
